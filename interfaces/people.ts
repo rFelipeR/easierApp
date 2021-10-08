@@ -15,5 +15,5 @@ export async function getPeople() {
 
 
 //collection = tabela
-// document = linha ou tupla
-// data = dado
+//document = linha ou tupla
+//data = dado

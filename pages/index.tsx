@@ -18,7 +18,7 @@ const Home: NextPage = () => {
       Listagem
       {list?.docs?.map(doc => {
         const people = doc.data() as People;
-        <span>{people.Id} – {people.Name}</span>
+        return <span>{people.Id} – {people.Name}</span>
       })}
 
       <footer className={styles.footer}></footer>
