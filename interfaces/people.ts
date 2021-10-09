@@ -14,12 +14,12 @@ export async function getPeople() {
 }
 
 
-// export async function addPeople(people: People) {
-//     const col = collection(db, 'people');
-//     // const docRef = await addDoc(col, people)
-//     // return addDoc(col, people)
+export async function addPeople(people: People) {
+    const col = collection(db, 'people');
+    // const docRef = await addDoc(col, people)
+    return addDoc(col, people)
 
-// }
+}
 
 
 //collection = tabela
