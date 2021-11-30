@@ -11,7 +11,9 @@ import SimulationPage from './simulator'
 const Home: NextPage = () => {
   const [list, setList] = useState<QuerySnapshot>();
   const [newValue, setNewValue] = useState('');
+
   const [isSimulating, setIsSimulating] = useState(false);
+  //const [cartao, setCartao] = useState<Card>();
 
   useEffect(() => {
     getPessoa().then(x =>
@@ -26,13 +28,13 @@ const Home: NextPage = () => {
       .catch(error => alert(console.log(error)))
   }
 
-  function handleAdd() {
-    const newPeople = { nome: newValue } as Pessoa
-    addPessoa(newPeople).then(x => {
-      alert('Salvo!')
-      handleGetPeople()
-    }).catch(error => console.log(error));
-  }
+  // function handleAdd() {
+  //   const newPeople = { nome: newValue } as People
+  //   addPeople(newPeople).then(x => {
+  //     alert('Salvo!')
+  //     handleGetPeople()
+  //   }).catch(error => console.log(error));
+  // }
 
   return (
     <div className={styles.container}>
@@ -42,14 +44,13 @@ const Home: NextPage = () => {
         <Button type="default" size="large" onClick={() => setIsSimulating(true)}> Iniciar simulação</Button>
       </Link>
 
-      {/* //   <SimulationPage /> */}
-
       {/* <div style={{ margin: '15px 0' }}>
         <input value={newValue} onChange={(e) => setNewValue(e.target.value)} />
         <button onClick={handleAdd}>+ Add</button>
       </div>
       Listagem
       {list?.docs?.map(doc => {
+<<<<<<< HEAD
         const people = doc.data() as Pessoa;
         return <span>{people.nome} – {people.email}</span>
       })} */}
