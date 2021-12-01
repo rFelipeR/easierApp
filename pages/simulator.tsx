@@ -339,15 +339,20 @@ export default function Simulator() {
         }
     ];
 
-    // const saveApolice = (values: CamposCalculo) => {
-    //     const newApolice = {} as Apolice;
-    //     if (values.furtosRoubos)
-    //         newApolice.cobertura.push({ 0: 'Furto e Roubos' })
-    //     addApolice(newApolice).then(x => {
-    //         alert('Salvo!')
-    //         //              handleGet()
-    //     }).catch(error => console.log(error));
-    // }
+    const saveApolice = () => {
+        let premio = simulationValues.tipo == TipoSeguro.Residencial ? simulationValues.valorAproximadoImovel : (simulationValues.tipo == TipoSeguro.Veiculo ? simulationValues.fipe : simulationValues.valorIndenizacao)
+        console.log('premio', premio);
+        let franquia = simulationValues.tipo == TipoSeguro.Vida ? 0 : premio * 0.05;
+        console.log('franquia', franquia);
+
+        const newApolice = { premio: premio, tipo: TipoSeguro[simulationValues.tipo], franquia: franquia, nomeCliente: 'Felipe (teste)' } as Apolice;
+        // if (values.furtosRoubos)
+        //     newApolice.cobertura.push(0: 'Furto e Roubos' })
+        addApolice(newApolice).then(x => {
+            alert('Salvo!')
+            //handleGet()
+        }).catch(error => console.log(error));
+    }
 
     const calcularSimulacao = () => {
         if (simulationValues?.tipo == TipoSeguro.Veiculo) {
@@ -387,8 +392,6 @@ export default function Simulator() {
                 );
 
             let resultado = ((((valorIndenizacao * idade) * obesidade) * tabagismo) * coberturaConjuge);
-            console.log('idade: ', idade);
-
             setTotal(resultado)
         }
         setIsModalVisible(true)
@@ -420,7 +423,7 @@ export default function Simulator() {
                     )
                 }
             </div>
-            <Modal title={false} visible={isModalVisible} onOk={() => setIsModalVisible(false)} onCancel={() => setIsModalVisible(false)}>
+            <Modal title={false} okText="Enviar para análise" visible={isModalVisible} onOk={() => [saveApolice(), setIsModalVisible(false)]} onCancel={() => setIsModalVisible(false)}>
                 <div style={{ textAlign: 'center' }}>
                     <h2>Simulação concluída <CheckOutlined color="green" /></h2>
                     <h4>A cotação para contratar é de R$ {total.toFixed(2)}</h4>

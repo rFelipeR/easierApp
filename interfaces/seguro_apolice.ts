@@ -1,9 +1,10 @@
 import { addDoc, collection, getDocs } from "firebase/firestore/lite";
 import { db } from './../services/firebase'
+import Pessoa from "./pessoa";
 
 export default interface Apolice {
     cobertura: [],
-    //contratante: People,
+    contratante: Pessoa,
     nomeCliente: string
     premio: number,
     franquia: number,
