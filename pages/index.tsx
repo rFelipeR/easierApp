@@ -11,13 +11,9 @@ const Home: NextPage = () => {
   //const [list, setList] = useState<QuerySnapshot>();
   const [isSimulating, setIsSimulating] = useState(false);
 
-
   return (
     <div className={styles.container}>
-      {/* {!isSimulating ?<> */}
       <h2>Simule diferentes tipos e condições de nossos seguros</h2>
-
-      
       <Link href='./simulator'>
         <Button type="default" size="large" onClick={() => setIsSimulating(true)}> Iniciar simulação</Button>
       </Link>

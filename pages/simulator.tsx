@@ -127,7 +127,7 @@ export default function Simulator() {
                     }
                     {simulationValues?.tipo == TipoSeguro.Residencial &&
                         <div>
-                            <p>Insira o valor aproximado da imóvel:</p>
+                            <p>Insira o valor aproximado do imóvel:</p>
                             <Form.Item>
                                 <InputNumber
                                     addonBefore={'R$'}
