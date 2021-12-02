@@ -14,7 +14,7 @@ export async function getCobertura() {
     return snapshot;
 }
 
-export async function addPeople(cobertura: Cobertura) {
+export async function addCobertura(cobertura: Cobertura) {
     const col = collection(db, 'seguro_cobertura');
     // const docRef = await addDoc(col, people)
     return addDoc(col, cobertura)

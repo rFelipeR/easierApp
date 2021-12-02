@@ -2,7 +2,6 @@ import { QuerySnapshot } from 'firebase/firestore/lite'
 import type { NextPage } from 'next'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import Pessoa, { addPessoa, getPessoa } from '../interfaces/pessoa'
 import styles from '../styles/Home.module.css'
 import { Button } from 'antd'
 import 'antd/dist/antd.css';
@@ -11,7 +10,7 @@ import SimulationPage from './simulator'
 const Home: NextPage = () => {
   //const [list, setList] = useState<QuerySnapshot>();
   const [isSimulating, setIsSimulating] = useState(false);
-  
+
 
   return (
     <div className={styles.container}>
