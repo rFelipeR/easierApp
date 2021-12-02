@@ -9,37 +9,16 @@ import 'antd/dist/antd.css';
 import SimulationPage from './simulator'
 
 const Home: NextPage = () => {
-  const [list, setList] = useState<QuerySnapshot>();
-  const [newValue, setNewValue] = useState('');
-
+  //const [list, setList] = useState<QuerySnapshot>();
   const [isSimulating, setIsSimulating] = useState(false);
-  //const [cartao, setCartao] = useState<Card>();
-
-  useEffect(() => {
-    getPessoa().then(x =>
-      setList(x)
-    )/* .catch(error => alert(error)); */
-  }, [])
-
-  function handleGetPeople() {
-    getPessoa()
-      .then(x => setList(x))
-      .catch(error => alert(error))
-      .catch(error => alert(console.log(error)))
-  }
-
-  // function handleAdd() {
-  //   const newPeople = { nome: newValue } as People
-  //   addPeople(newPeople).then(x => {
-  //     alert('Salvo!')
-  //     handleGetPeople()
-  //   }).catch(error => console.log(error));
-  // }
+  
 
   return (
     <div className={styles.container}>
       {/* {!isSimulating ?<> */}
       <h2>Simule diferentes tipos e condições de nossos seguros</h2>
+
+      
       <Link href='./simulator'>
         <Button type="default" size="large" onClick={() => setIsSimulating(true)}> Iniciar simulação</Button>
       </Link>

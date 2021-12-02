@@ -3,12 +3,14 @@ import { db } from './../services/firebase'
 import Pessoa from "./pessoa";
 
 export default interface Apolice {
-    cobertura: [],
+    coberturas: [],
     contratante: Pessoa,
     nomeCliente: string
     premio: number,
     franquia: number,
     tipo: string,
+    idade?: number
+    dataContrato: string
 }
 
 export async function getApolice() {

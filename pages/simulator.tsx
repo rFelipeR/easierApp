@@ -4,8 +4,11 @@ import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import style from './../styles/simulator.module.css'
 import 'antd/dist/antd.css';
 import Apolice, { addApolice } from '../interfaces/seguro_apolice';
+import Pessoa from '../interfaces/pessoa';
 
 interface CamposCalculo {
+    nomeCliente: string;
+    emailCliente: string;
     tipo: TipoSeguro;
     //vida
     valorIndenizacao: number;
@@ -42,14 +45,15 @@ export default function Simulator() {
 
     const { Step } = Steps
     const [isModalVisible, setIsModalVisible] = useState(false)
+    const [contactModalVisible, setContactModalVisible] = useState(true)
     const [current, setCurrent] = useState(0);
     const [total, setTotal] = useState(0);
     const parcel = total / 12;
-    // const [simulationValues, setSimulationValues] = useState<CamposCalculo>();
+
     const [simulationValues, setSimulationValues] = useState({
         obesidade: false, tabagismo: false, conjuge: false, regiaoMetropolitana: false,
-        incendiosExplosoes: true, contraTerceiros: true, desastresNaturais: true, oscilacaoEnergia: true,
-        tipoUso: TipoUso.Particular
+        incendiosExplosoes: true, contraTerceiros: true, furtosRoubos: true, desastresNaturais: true, oscilacaoEnergia: true,
+        tipoUso: TipoUso.Particular,
     } as CamposCalculo);
 
     const next = () => { setCurrent(current + 1); };
@@ -72,16 +76,33 @@ export default function Simulator() {
             content:
                 <>
                     <div>
-                        <p>Selecione o tipo do seguro:</p>
-                        <Form.Item /*  label="Select" */>
-                            <Radio.Group
-                                size="large"
-                                // buttonStyle={{minWidth:'79px'}}
-                                options={type_options}
-                                onChange={(e) => { setSimulationValues(prevState => ({ ...prevState, tipo: e.target.value }) as CamposCalculo) }}
-                                optionType="button"
-                            />
-                        </Form.Item>
+                        {/* <p>Preencha os dados para contato:</p> */}
+                        <Form layout="vertical">
+                            <Form.Item label="Nome" rules={[{ required: true, message: 'Por favor, insira o nome!' }]}>
+                                <Input
+                                    width={150}
+                                    onChange={(e) => { setSimulationValues(prevState => ({ ...prevState, nomeCliente: e.target.value }) as CamposCalculo) }}
+                                />
+                            </Form.Item>
+                            <Form.Item label="E-mail" rules={[{ required: true, message: 'Por favor, insira o e-mail!' }]}>
+                                <Input
+                                    type="email"
+                                    width={150}
+                                    onChange={(e) => { setSimulationValues(prevState => ({ ...prevState, emailCliente: e.target.value }) as CamposCalculo) }}
+                                />
+                            </Form.Item>
+
+                            <p>Selecione o tipo do seguro:</p>
+                            <Form.Item /*  label="Select" */>
+                                <Radio.Group
+                                    size="large"
+                                    // buttonStyle={{minWidth:'79px'}}
+                                    options={type_options}
+                                    onChange={(e) => { setSimulationValues(prevState => ({ ...prevState, tipo: e.target.value }) as CamposCalculo) }}
+                                    optionType="button"
+                                />
+                            </Form.Item>
+                        </Form>
                     </div>
                 </>,
         },
@@ -341,16 +362,53 @@ export default function Simulator() {
 
     const saveApolice = () => {
         let premio = simulationValues.tipo == TipoSeguro.Residencial ? simulationValues.valorAproximadoImovel : (simulationValues.tipo == TipoSeguro.Veiculo ? simulationValues.fipe : simulationValues.valorIndenizacao)
-        console.log('premio', premio);
         let franquia = simulationValues.tipo == TipoSeguro.Vida ? 0 : premio * 0.05;
-        console.log('franquia', franquia);
+        let coberturas = Array<string>();
+        if (simulationValues.tipo == TipoSeguro.Vida) {
+            if (simulationValues.conjuge)
+                coberturas.push("Morte ou invalidez do cônjuge");
+        }
+        if (simulationValues.tipo == TipoSeguro.Residencial) {
+            if (simulationValues.furtosRoubos)
+                coberturas.push("Furtos/Roubos");
+            if (simulationValues.incendiosExplosoes)
+                coberturas.push("Incêndios e explosões");
+            if (simulationValues.contraTerceiros)
+                coberturas.push("Contra terceiros");
+            if (simulationValues.oscilacaoEnergia)
+                coberturas.push("Danos elétricos");
+            if (simulationValues.desastresNaturais)
+                coberturas.push("Desastres naturais");
+        }
+        if (simulationValues.tipo == TipoSeguro.Veiculo) {
+            if (simulationValues.furtosRoubos)
+                coberturas.push("Furtos/Roubos");
+            if (simulationValues.contraTerceiros)
+                coberturas.push("Contra terceiros");
+        }
 
-        const newApolice = { premio: premio, tipo: TipoSeguro[simulationValues.tipo], franquia: franquia, nomeCliente: 'Felipe (teste)' } as Apolice;
-        // if (values.furtosRoubos)
-        //     newApolice.cobertura.push(0: 'Furto e Roubos' })
+        const success = () => {
+            const hide = message.success(`Solitação recebida! Entraremos em contato através do e-mail fornecido, ${newApolice.nomeCliente}!`, 0);
+            // Dismiss manually and asynchronously
+            setTimeout(hide, 5000);
+        };
+
+        const newApolice =
+            {
+                premio: premio,
+                tipo: TipoSeguro[simulationValues.tipo],
+                franquia: franquia,
+                nomeCliente: simulationValues.nomeCliente,
+                contratante: { nome: simulationValues.nomeCliente, email: simulationValues.emailCliente ?? "", saldo: 0 } as Pessoa,
+                idade: simulationValues.idade ?? 0,
+                coberturas: coberturas,
+                dataContrato: new Date().toLocaleDateString()
+            } as Apolice;
+
+        console.log('apolice: ', newApolice)
         addApolice(newApolice).then(x => {
-            alert('Salvo!')
-            //handleGet()
+            success()
+            //message.success(`Solitação recebida! Entraremos em contato através do e-mail fornecido, ${newApolice.nomeCliente}!`, 3000,);
         }).catch(error => console.log(error));
     }
 
@@ -414,7 +472,7 @@ export default function Simulator() {
                 }
                 {
                     current < steps.length - 1 && (
-                        <Button type="primary" onClick={() => next()}>Avançar</Button>
+                        <Button type="primary" disabled={!simulationValues.tipo || !simulationValues.nomeCliente || !simulationValues.emailCliente} onClick={() => next()}>Avançar</Button>
                     )
                 }
                 {
@@ -423,13 +481,14 @@ export default function Simulator() {
                     )
                 }
             </div>
-            <Modal title={false} okText="Enviar para análise" visible={isModalVisible} onOk={() => [saveApolice(), setIsModalVisible(false)]} onCancel={() => setIsModalVisible(false)}>
+
+            <Modal title={false} okText="Contratar" visible={isModalVisible} onOk={() => [saveApolice(), setIsModalVisible(false)]} onCancel={() => [setIsModalVisible(false), setCurrent(0)]} cancelText="Simular novamente">
                 <div style={{ textAlign: 'center' }}>
                     <h2>Simulação concluída <CheckOutlined color="green" /></h2>
                     <h4>A cotação para contratar é de R$ {total.toFixed(2)}</h4>
                     <h4>Em até 12x de <span style={{ backgroundColor: 'green', color: 'white', padding: '.25rem', borderRadius: '3%' }}> apenas R$ {parcel.toFixed(2)}/mês</span></h4>
                 </div>
-            </Modal>
+            </Modal >
         </div >
     );
 }
